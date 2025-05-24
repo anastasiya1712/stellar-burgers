@@ -14,6 +14,7 @@ import styles from './app.module.css';
 
 import { AppHeader } from '@components';
 import { Route, Routes } from 'react-router-dom';
+import { ProtectedRoute } from '../protected-route';
 
 const App = () => (
   <div className={styles.app}>
@@ -22,13 +23,23 @@ const App = () => (
       <Route path='*' element={<NotFound404 />} />
       <Route path='/' element={<ConstructorPage />} />
       <Route path='/feed' element={<Feed />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route path='/reset-password' element={<ResetPassword />} />
-      <Route path='/profile'>
-        <Route index element={<Profile />} />
-        <Route path='orders' element={<ProfileOrders />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path='/login' element={<Login />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path='/register' element={<Register />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path='/reset-password' element={<ResetPassword />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path='/profile'>
+          <Route index element={<Profile />} />
+          <Route path='orders' element={<ProfileOrders />} />
+        </Route>
       </Route>
     </Routes>
   </div>
