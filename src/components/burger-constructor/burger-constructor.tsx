@@ -33,13 +33,13 @@ export const BurgerConstructor: FC = () => {
       return;
     }
 
-    const ingredients = [
-      constructorItems.bun._id,
-      ...constructorItems.ingredients.map((item) => item._id),
-      constructorItems.bun._id
-    ];
+    // const ingredients = [
+    //   constructorItems.bun.price,
+    //   ...constructorItems.ingredients,
+    //   constructorItems.bun.price
+    // ];
 
-    dispatch(placeOrder({ ingredients }));
+    // dispatch(placeOrder({ ingredients }));
   };
 
   const closeOrderModal = () => {

@@ -8,6 +8,7 @@ import {
   updateUserApi
 } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../services/store';
 
 interface User {
   email: string;
@@ -33,22 +34,14 @@ interface UserState {
   logoutError: string | null;
 }
 
-const initialState: UserState = {
-  user: null,
-  registerLoading: false,
-  registerError: null,
-  loginLoading: false,
-  loginError: null,
-  forgotLoading: false,
-  forgotError: null,
-  resetLoading: false,
-  resetError: null,
-  getUserLoading: false,
-  getUserError: null,
-  updateLoading: false,
-  updateError: null,
-  logoutLoading: false,
-  logoutError: null
+const saveTokens = (accessToken: string, refreshToken: string) => {
+  localStorage.setItem('accessToken', accessToken);
+  localStorage.setItem('refreshToken', refreshToken);
+};
+
+const removeTokens = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
 };
 
 export const registerUser = createAsyncThunk<
@@ -58,6 +51,9 @@ export const registerUser = createAsyncThunk<
 >('user/registerUser', async (userData, thunkAPI) => {
   try {
     const response = await registerUserApi(userData);
+    if (response.accessToken && response.refreshToken) {
+      saveTokens(response.accessToken, response.refreshToken);
+    }
     return response;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message || 'Ошибка при регистрации');
@@ -71,11 +67,32 @@ export const loginUser = createAsyncThunk<
 >('user/loginUser', async (credentials, thunkAPI) => {
   try {
     const response = await loginUserApi(credentials);
+    if (response.accessToken && response.refreshToken) {
+      saveTokens(response.accessToken, response.refreshToken);
+    }
     return response;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message || 'Ошибка при авторизации');
   }
 });
+
+export const checkAuth = createAsyncThunk<any, void, { rejectValue: string }>(
+  'user/checkAuth',
+  async (_, thunkAPI) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        return thunkAPI.rejectWithValue('Нет токена авторизации');
+      }
+      const response = await getUserApi();
+      return response;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.message || 'Ошибка при получении данных пользователя'
+      );
+    }
+  }
+);
 
 export const forgotPassword = createAsyncThunk<
   any,
@@ -141,6 +158,7 @@ export const logout = createAsyncThunk<any, void, { rejectValue: string }>(
   async (_, thunkAPI) => {
     try {
       const response = await logoutApi();
+      removeTokens();
       return response;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -150,12 +168,31 @@ export const logout = createAsyncThunk<any, void, { rejectValue: string }>(
   }
 );
 
+const initialState: UserState = {
+  user: null,
+  registerLoading: false,
+  registerError: null,
+  loginLoading: false,
+  loginError: null,
+  forgotLoading: false,
+  forgotError: null,
+  resetLoading: false,
+  resetError: null,
+  getUserLoading: false,
+  getUserError: null,
+  updateLoading: false,
+  updateError: null,
+  logoutLoading: false,
+  logoutError: null
+};
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Register
       .addCase(registerUser.pending, (state) => {
         state.registerLoading = true;
         state.registerError = null;
@@ -168,6 +205,7 @@ const userSlice = createSlice({
         state.registerLoading = false;
         state.registerError = action.payload as string;
       })
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loginLoading = true;
         state.loginError = null;
@@ -180,6 +218,20 @@ const userSlice = createSlice({
         state.loginLoading = false;
         state.loginError = action.payload as string;
       })
+      // Check Auth
+      .addCase(checkAuth.pending, (state) => {
+        state.getUserLoading = true;
+        state.getUserError = null;
+      })
+      .addCase(checkAuth.fulfilled, (state, action: PayloadAction<any>) => {
+        state.getUserLoading = false;
+        state.user = action.payload.user;
+      })
+      .addCase(checkAuth.rejected, (state, action) => {
+        state.getUserLoading = false;
+        state.getUserError = action.payload as string;
+      })
+      // Forgot Password
       .addCase(forgotPassword.pending, (state) => {
         state.forgotLoading = true;
         state.forgotError = null;
@@ -191,6 +243,7 @@ const userSlice = createSlice({
         state.forgotLoading = false;
         state.forgotError = action.payload as string;
       })
+      // Reset Password
       .addCase(resetPassword.pending, (state) => {
         state.resetLoading = true;
         state.resetError = null;
@@ -202,6 +255,7 @@ const userSlice = createSlice({
         state.resetLoading = false;
         state.resetError = action.payload as string;
       })
+      // Get User
       .addCase(fetchUser.pending, (state) => {
         state.getUserLoading = true;
         state.getUserError = null;
@@ -214,6 +268,7 @@ const userSlice = createSlice({
         state.getUserLoading = false;
         state.getUserError = action.payload as string;
       })
+      // Update User
       .addCase(updateUser.pending, (state) => {
         state.updateLoading = true;
         state.updateError = null;
@@ -226,6 +281,7 @@ const userSlice = createSlice({
         state.updateLoading = false;
         state.updateError = action.payload as string;
       })
+      // Logout
       .addCase(logout.pending, (state) => {
         state.logoutLoading = true;
         state.logoutError = null;
@@ -243,18 +299,24 @@ const userSlice = createSlice({
 
 export default userSlice.reducer;
 
-export const selectUser = (state: any) => state.user.user;
-export const selectRegisterLoading = (state: any) => state.user.registerLoading;
-export const selectRegisterError = (state: any) => state.user.registerError;
-export const selectLoginLoading = (state: any) => state.user.loginLoading;
-export const selectLoginError = (state: any) => state.user.loginError;
-export const selectForgotLoading = (state: any) => state.user.forgotLoading;
-export const selectForgotError = (state: any) => state.user.forgotError;
-export const selectResetLoading = (state: any) => state.user.resetLoading;
-export const selectResetError = (state: any) => state.user.resetError;
-export const selectGetUserLoading = (state: any) => state.user.getUserLoading;
-export const selectGetUserError = (state: any) => state.user.getUserError;
-export const selectUpdateLoading = (state: any) => state.user.updateLoading;
-export const selectUpdateError = (state: any) => state.user.updateError;
-export const selectLogoutLoading = (state: any) => state.user.logoutLoading;
-export const selectLogoutError = (state: any) => state.user.logoutError;
+export const selectUser = (state: RootState) => state.user.user;
+export const selectRegisterLoading = (state: RootState) =>
+  state.user.registerLoading;
+export const selectRegisterError = (state: RootState) =>
+  state.user.registerError;
+export const selectLoginLoading = (state: RootState) => state.user.loginLoading;
+export const selectLoginError = (state: RootState) => state.user.loginError;
+export const selectForgotLoading = (state: RootState) =>
+  state.user.forgotLoading;
+export const selectForgotError = (state: RootState) => state.user.forgotError;
+export const selectResetLoading = (state: RootState) => state.user.resetLoading;
+export const selectResetError = (state: RootState) => state.user.resetError;
+export const selectGetUserLoading = (state: RootState) =>
+  state.user.getUserLoading;
+export const selectGetUserError = (state: RootState) => state.user.getUserError;
+export const selectUpdateLoading = (state: RootState) =>
+  state.user.updateLoading;
+export const selectUpdateError = (state: RootState) => state.user.updateError;
+export const selectLogoutLoading = (state: RootState) =>
+  state.user.logoutLoading;
+export const selectLogoutError = (state: RootState) => state.user.logoutError;
