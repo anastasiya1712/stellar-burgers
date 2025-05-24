@@ -9,11 +9,11 @@ import {
 } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../services/store';
+import { deleteCookie, getCookie, setCookie } from '../../utils/cookie';
 
 interface User {
   email: string;
   name: string;
-  // Добавьте другие поля при необходимости
 }
 
 interface UserState {
@@ -37,11 +37,15 @@ interface UserState {
 const saveTokens = (accessToken: string, refreshToken: string) => {
   localStorage.setItem('accessToken', accessToken);
   localStorage.setItem('refreshToken', refreshToken);
+  setCookie('accessToken', accessToken);
+  setCookie('refreshToken', refreshToken);
 };
 
 const removeTokens = () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
+  deleteCookie('accessToken');
+  deleteCookie('refreshToken');
 };
 
 export const registerUser = createAsyncThunk<
@@ -144,7 +148,10 @@ export const updateUser = createAsyncThunk<
   { rejectValue: string }
 >('user/updateUser', async (userData, thunkAPI) => {
   try {
+    console.log('cookies: ' + getCookie('accessToken'));
+    console.log('user data: ' + userData);
     const response = await updateUserApi(userData);
+    console.log('response: ' + response);
     return response;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
