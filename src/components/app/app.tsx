@@ -12,7 +12,7 @@ import {
 import '../../index.css';
 import styles from './app.module.css';
 
-import { AppHeader } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
 
@@ -22,7 +22,17 @@ const App = () => (
     <Routes>
       <Route path='*' element={<NotFound404 />} />
       <Route path='/' element={<ConstructorPage />} />
-      <Route path='/feed' element={<Feed />} />
+      <Route path='/feed'>
+        <Route index element={<Feed />} />
+        <Route
+          path=':number'
+          element={
+            <Modal title='' onClose={() => {}}>
+              <OrderInfo />
+            </Modal>
+          }
+        />
+      </Route>
       <Route element={<ProtectedRoute />}>
         <Route path='/login' element={<Login />} />
       </Route>
@@ -38,9 +48,27 @@ const App = () => (
       <Route element={<ProtectedRoute />}>
         <Route path='/profile'>
           <Route index element={<Profile />} />
-          <Route path='orders' element={<ProfileOrders />} />
+          <Route path='orders'>
+            <Route index element={<ProfileOrders />} />
+            <Route
+              path=':number'
+              element={
+                <Modal title='' onClose={() => {}}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+          </Route>
         </Route>
       </Route>
+      <Route
+        path='/ingredients/:id'
+        element={
+          <Modal title='' onClose={() => {}}>
+            <IngredientDetails />
+          </Modal>
+        }
+      />
     </Routes>
   </div>
 );
