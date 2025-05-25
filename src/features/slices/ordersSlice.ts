@@ -1,15 +1,24 @@
 import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../services/store';
+import { TOrder } from '@utils-types';
 
-interface Order {
-  // Определите поля заказа по необходимости
-  number: number;
-  // ...
+interface OrdersResponse {
+  success: boolean;
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+}
+
+interface OrderResponse {
+  success: boolean;
+  name: string;
+  order: TOrder;
 }
 
 interface OrdersState {
-  orders: Order[];
-  currentOrder: Order | null;
+  orders: TOrder[];
+  currentOrder: TOrder | null;
   isLoadingOrders: boolean;
   isLoadingOrder: boolean;
   isPostingOrder: boolean;
@@ -30,13 +39,16 @@ const initialState: OrdersState = {
 };
 
 export const fetchUserOrders = createAsyncThunk<
-  any,
+  TOrder[],
   void,
   { rejectValue: string }
 >('orders/fetchUserOrders', async (_, thunkAPI) => {
   try {
-    const response = await getOrdersApi();
-    return response;
+    const response = (await getOrdersApi()) as unknown as OrdersResponse;
+    if (!response.success) {
+      throw new Error('Ошибка при получении заказов');
+    }
+    return response.orders;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || 'Ошибка при получении заказов'
@@ -45,13 +57,18 @@ export const fetchUserOrders = createAsyncThunk<
 });
 
 export const placeOrder = createAsyncThunk<
-  any,
+  TOrder,
   { ingredients: string[] },
   { rejectValue: string }
 >('orders/placeOrder', async (orderData, thunkAPI) => {
   try {
-    const response = await orderBurgerApi(orderData.ingredients);
-    return response;
+    const response = (await orderBurgerApi(
+      orderData.ingredients
+    )) as unknown as OrderResponse;
+    if (!response.success) {
+      throw new Error('Ошибка при оформлении заказа');
+    }
+    return response.order;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || 'Ошибка при оформлении заказа'
@@ -60,13 +77,18 @@ export const placeOrder = createAsyncThunk<
 });
 
 export const fetchOrderByNumber = createAsyncThunk<
-  any,
+  TOrder,
   number,
   { rejectValue: string }
 >('orders/fetchOrderByNumber', async (orderNumber, thunkAPI) => {
   try {
-    const response = await getOrderByNumberApi(orderNumber);
-    return response;
+    const response = (await getOrderByNumberApi(
+      orderNumber
+    )) as unknown as OrdersResponse;
+    if (!response.success || !response.orders.length) {
+      throw new Error('Заказ не найден');
+    }
+    return response.orders[0];
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
       error.message || 'Ошибка при получении заказа'
@@ -77,62 +99,72 @@ export const fetchOrderByNumber = createAsyncThunk<
 const ordersSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {},
+  reducers: {
+    clearCurrentOrder: (state) => {
+      state.currentOrder = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
+      // Получение списка заказов пользователя
       .addCase(fetchUserOrders.pending, (state) => {
         state.isLoadingOrders = true;
         state.ordersError = null;
       })
-      .addCase(
-        fetchUserOrders.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.isLoadingOrders = false;
-          state.orders = action.payload;
-        }
-      )
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.isLoadingOrders = false;
+        state.orders = action.payload;
+      })
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.isLoadingOrders = false;
-        state.ordersError = action.payload as string;
+        state.ordersError = action.payload || 'Произошла ошибка';
       })
+      // Размещение заказа
       .addCase(placeOrder.pending, (state) => {
         state.isPostingOrder = true;
         state.postError = null;
       })
-      .addCase(placeOrder.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(placeOrder.fulfilled, (state, action) => {
         state.isPostingOrder = false;
         state.currentOrder = action.payload;
+        // Добавляем новый заказ в начало списка
+        state.orders = [action.payload, ...state.orders];
       })
       .addCase(placeOrder.rejected, (state, action) => {
         state.isPostingOrder = false;
-        state.postError = action.payload as string;
+        state.postError = action.payload || 'Произошла ошибка';
       })
+      // Получение заказа по номеру
       .addCase(fetchOrderByNumber.pending, (state) => {
         state.isLoadingOrder = true;
         state.orderError = null;
       })
-      .addCase(
-        fetchOrderByNumber.fulfilled,
-        (state, action: PayloadAction<any>) => {
-          state.isLoadingOrder = false;
-          state.currentOrder = action.payload;
-        }
-      )
+      .addCase(fetchOrderByNumber.fulfilled, (state, action) => {
+        state.isLoadingOrder = false;
+        state.currentOrder = action.payload;
+      })
       .addCase(fetchOrderByNumber.rejected, (state, action) => {
         state.isLoadingOrder = false;
-        state.orderError = action.payload as string;
+        state.orderError = action.payload || 'Произошла ошибка';
       });
   }
 });
 
+export const { clearCurrentOrder } = ordersSlice.actions;
+
 export default ordersSlice.reducer;
 
-export const selectOrders = (state: any) => state.orders.orders;
-export const selectCurrentOrder = (state: any) => state.orders.currentOrder;
-export const selectOrdersLoading = (state: any) => state.orders.isLoadingOrders;
-export const selectOrderLoading = (state: any) => state.orders.isLoadingOrder;
-export const selectPostOrderLoading = (state: any) =>
+// Селекторы
+export const selectOrders = (state: RootState) => state.orders.orders;
+export const selectCurrentOrder = (state: RootState) =>
+  state.orders.currentOrder;
+export const selectOrdersLoading = (state: RootState) =>
+  state.orders.isLoadingOrders;
+export const selectOrderLoading = (state: RootState) =>
+  state.orders.isLoadingOrder;
+export const selectPostOrderLoading = (state: RootState) =>
   state.orders.isPostingOrder;
-export const selectOrdersError = (state: any) => state.orders.ordersError;
-export const selectOrderError = (state: any) => state.orders.orderError;
-export const selectPostOrderError = (state: any) => state.orders.postError;
+export const selectOrdersError = (state: RootState) => state.orders.ordersError;
+export const selectOrderError = (state: RootState) => state.orders.orderError;
+export const selectPostOrderError = (state: RootState) =>
+  state.orders.postError;

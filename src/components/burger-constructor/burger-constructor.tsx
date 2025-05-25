@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
@@ -6,7 +6,8 @@ import { selectUser } from '../../features/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 import {
   placeOrder,
-  selectPostOrderLoading
+  selectPostOrderLoading,
+  selectCurrentOrder
 } from '../../features/slices/ordersSlice';
 import {
   selectConstructorBun,
@@ -21,13 +22,14 @@ export const BurgerConstructor: FC = () => {
   const orderRequest = useSelector(selectPostOrderLoading);
   const bun = useSelector(selectConstructorBun);
   const ingredients = useSelector(selectConstructorIngredients);
+  const currentOrder = useSelector(selectCurrentOrder);
 
   const constructorItems = {
     bun,
     ingredients: ingredients || []
   };
 
-  const orderModalData = null;
+  const orderModalData = currentOrder;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
