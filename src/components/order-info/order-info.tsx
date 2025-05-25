@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   fetchOrderByNumber,
@@ -17,18 +17,17 @@ interface TIngredientsWithCount {
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
   const orderData = useSelector(selectCurrentOrder);
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectOrderLoading);
 
   useEffect(() => {
-    // Загружаем данные заказа только если у нас нет номера заказа
-    // или если текущий заказ отличается от запрашиваемого
-    if (number && (!orderData || orderData.number.toString() !== number)) {
+    if (number) {
       dispatch(fetchOrderByNumber(parseInt(number)));
     }
-  }, [dispatch, number, orderData]);
+  }, [dispatch, number]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

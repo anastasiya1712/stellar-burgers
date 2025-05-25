@@ -49,7 +49,6 @@ const App = () => {
         <Route path='/feed' element={<Feed />} />
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
-        <Route path='/order/:number' element={<OrderInfo />} />
 
         <Route element={<ProtectedRoute onlyUnAuth />}>
           <Route path='/login' element={<Login />} />
@@ -62,6 +61,7 @@ const App = () => {
           <Route path='/profile' element={<Profile />} />
           <Route path='/profile/orders' element={<ProfileOrders />} />
           <Route path='/profile/orders/:number' element={<OrderInfo />} />
+          <Route path='/order/:number' element={<OrderInfo />} />
         </Route>
 
         <Route path='*' element={<NotFound404 />} />
@@ -85,22 +85,25 @@ const App = () => {
               </Modal>
             }
           />
-          <Route
-            path='/profile/orders/:number'
-            element={
-              <Modal title='' onClose={handleModalClose}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
-          <Route
-            path='/order/:number'
-            element={
-              <Modal title='Заказ оформлен' onClose={handleModalClose}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
+
+          <Route element={<ProtectedRoute onlyUnAuth={false} />}>
+            <Route
+              path='/profile/orders/:number'
+              element={
+                <Modal title='' onClose={handleModalClose}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+            <Route
+              path='/order/:number'
+              element={
+                <Modal title='Заказ оформлен' onClose={handleModalClose}>
+                  <OrderInfo />
+                </Modal>
+              }
+            />
+          </Route>
         </Routes>
       )}
     </div>
