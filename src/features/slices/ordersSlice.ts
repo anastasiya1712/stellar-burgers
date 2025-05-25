@@ -102,6 +102,9 @@ const ordersSlice = createSlice({
   reducers: {
     clearCurrentOrder: (state) => {
       state.currentOrder = null;
+    },
+    updateOrders: (state, action) => {
+      state.orders = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -127,8 +130,6 @@ const ordersSlice = createSlice({
       .addCase(placeOrder.fulfilled, (state, action) => {
         state.isPostingOrder = false;
         state.currentOrder = action.payload;
-        // Добавляем новый заказ в начало списка
-        state.orders = [action.payload, ...state.orders];
       })
       .addCase(placeOrder.rejected, (state, action) => {
         state.isPostingOrder = false;
@@ -150,7 +151,7 @@ const ordersSlice = createSlice({
   }
 });
 
-export const { clearCurrentOrder } = ordersSlice.actions;
+export const { clearCurrentOrder, updateOrders } = ordersSlice.actions;
 
 export default ordersSlice.reducer;
 

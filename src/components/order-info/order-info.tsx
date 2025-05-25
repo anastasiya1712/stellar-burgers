@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   fetchOrderByNumber,
-  selectCurrentOrder
+  selectCurrentOrder,
+  selectOrderLoading
 } from '../../features/slices/ordersSlice';
 import { selectIngredients } from '../../features/slices/ingredientsSlice';
 import { Preloader } from '../ui/preloader';
@@ -19,12 +20,15 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const orderData = useSelector(selectCurrentOrder);
   const ingredients = useSelector(selectIngredients);
+  const isLoading = useSelector(selectOrderLoading);
 
   useEffect(() => {
-    if (number) {
+    // Загружаем данные заказа только если у нас нет номера заказа
+    // или если текущий заказ отличается от запрашиваемого
+    if (number && (!orderData || orderData.number.toString() !== number)) {
       dispatch(fetchOrderByNumber(parseInt(number)));
     }
-  }, [dispatch, number]);
+  }, [dispatch, number, orderData]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -69,7 +73,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading || !orderInfo) {
     return <Preloader />;
   }
 

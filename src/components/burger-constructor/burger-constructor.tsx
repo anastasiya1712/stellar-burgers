@@ -1,9 +1,9 @@
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import { selectUser } from '../../features/slices/userSlice';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   placeOrder,
   selectPostOrderLoading,
@@ -19,7 +19,6 @@ import {
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const user = useSelector(selectUser);
   const orderRequest = useSelector(selectPostOrderLoading);
   const bun = useSelector(selectConstructorBun);
@@ -50,18 +49,9 @@ export const BurgerConstructor: FC = () => {
     dispatch(placeOrder({ ingredients: ingredientIds }));
   };
 
-  useEffect(() => {
-    if (currentOrder) {
-      navigate(`/order/${currentOrder.number}`, {
-        state: { background: location }
-      });
-    }
-  }, [currentOrder, navigate, location]);
-
   const closeOrderModal = () => {
     dispatch(clearCurrentOrder());
     dispatch(clearConstructor());
-    navigate(-1);
   };
 
   const price = useMemo(() => {

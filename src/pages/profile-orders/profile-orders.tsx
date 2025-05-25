@@ -14,13 +14,34 @@ export const ProfileOrders: FC = () => {
   const isLoading = useSelector(selectOrdersLoading);
 
   useEffect(() => {
+    // Первоначальная загрузка заказов
     dispatch(fetchUserOrders());
-    // Устанавливаем интервал для периодического обновления заказов
-    const interval = setInterval(() => {
-      dispatch(fetchUserOrders());
-    }, 15000); // Обновляем каждые 15 секунд
 
-    return () => clearInterval(interval);
+    // Создаем WebSocket соединение для получения обновлений
+    const ws = new WebSocket('wss://norma.nomoreparties.space/orders');
+
+    ws.onopen = () => {
+      const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
+      if (token) {
+        ws.send(
+          JSON.stringify({
+            token
+          })
+        );
+      }
+    };
+
+    ws.onmessage = (event) => {
+      const { orders } = JSON.parse(event.data);
+      if (orders) {
+        // Обновляем заказы в сторе
+        dispatch({ type: 'orders/updateOrders', payload: orders });
+      }
+    };
+
+    return () => {
+      ws.close();
+    };
   }, [dispatch]);
 
   if (isLoading && !orders.length) {

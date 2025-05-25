@@ -19,6 +19,8 @@ import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { fetchIngredients } from '../../features/slices/ingredientsSlice';
 import { checkAuth } from '../../features/slices/userSlice';
+import { clearCurrentOrder } from '../../features/slices/ordersSlice';
+import { clearConstructor } from '../../features/slices/constructorSlice';
 
 const App = () => {
   const location = useLocation();
@@ -32,6 +34,10 @@ const App = () => {
   }, [dispatch]);
 
   const handleModalClose = () => {
+    if (location.pathname.startsWith('/order/')) {
+      dispatch(clearCurrentOrder());
+      dispatch(clearConstructor());
+    }
     navigate(-1);
   };
 
