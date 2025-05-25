@@ -18,37 +18,43 @@ const constructorSlice = createSlice({
   reducers: {
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       const ingredient = action.payload;
+      const currentState = state || initialState;
+
       if (ingredient.type === 'bun') {
         return {
-          ...state,
+          ...currentState,
           bun: ingredient
         };
       }
       return {
-        ...state,
+        ...currentState,
         ingredients: [
-          ...state.ingredients,
+          ...(currentState.ingredients || []),
           { ...ingredient, uniqueId: Date.now().toString() }
         ]
       };
     },
-    removeIngredient: (state, action: PayloadAction<string>) => ({
-      ...state,
-      ingredients: state.ingredients.filter(
-        (item) => item.uniqueId !== action.payload
-      )
-    }),
+    removeIngredient: (state, action: PayloadAction<string>) => {
+      const currentState = state || initialState;
+      return {
+        ...currentState,
+        ingredients: currentState.ingredients.filter(
+          (item) => item.uniqueId !== action.payload
+        )
+      };
+    },
     moveIngredient: (
       state,
       action: PayloadAction<{ dragIndex: number; hoverIndex: number }>
     ) => {
+      const currentState = state || initialState;
       const { dragIndex, hoverIndex } = action.payload;
-      const ingredients = [...state.ingredients];
+      const ingredients = [...currentState.ingredients];
       const dragItem = ingredients[dragIndex];
       ingredients.splice(dragIndex, 1);
       ingredients.splice(hoverIndex, 0, dragItem);
       return {
-        ...state,
+        ...currentState,
         ingredients
       };
     },
@@ -65,8 +71,9 @@ export const {
 
 export default constructorSlice.reducer;
 
-export const selectConstructorState = (state: RootState) => state.constructor;
+export const selectConstructorState = (state: RootState) =>
+  state.constructor || initialState;
 export const selectConstructorBun = (state: RootState) =>
-  state.constructor?.bun || null;
+  (state.constructor || initialState).bun;
 export const selectConstructorIngredients = (state: RootState) =>
-  state.constructor?.ingredients || [];
+  (state.constructor || initialState).ingredients;
