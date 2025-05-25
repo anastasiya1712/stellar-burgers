@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from '../../services/store';
 import {
   fetchUserOrders,
   selectOrders,
-  selectOrdersLoading
+  selectOrdersLoading,
+  updateOrders
 } from '../../features/slices/ordersSlice';
 import { Preloader } from '@ui';
 
@@ -18,25 +19,26 @@ export const ProfileOrders: FC = () => {
     dispatch(fetchUserOrders());
 
     // Создаем WebSocket соединение для получения обновлений
-    const ws = new WebSocket('wss://norma.nomoreparties.space/orders');
+    const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
+    if (!token) return;
+
+    const ws = new WebSocket(
+      `wss://norma.nomoreparties.space/orders?token=${token}`
+    );
 
     ws.onopen = () => {
-      const token = localStorage.getItem('accessToken')?.replace('Bearer ', '');
-      if (token) {
-        ws.send(
-          JSON.stringify({
-            token
-          })
-        );
-      }
+      console.log('WebSocket connection established');
     };
 
     ws.onmessage = (event) => {
-      const { orders } = JSON.parse(event.data);
-      if (orders) {
-        // Обновляем заказы в сторе
-        dispatch({ type: 'orders/updateOrders', payload: orders });
+      const data = JSON.parse(event.data);
+      if (data.success && data.orders) {
+        dispatch(updateOrders(data.orders.reverse()));
       }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
     };
 
     return () => {
