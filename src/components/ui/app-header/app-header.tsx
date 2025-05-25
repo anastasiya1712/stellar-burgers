@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
 import {
@@ -8,7 +8,7 @@ import {
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../../services/store';
 import { selectUser } from '../../../features/slices/userSlice';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
