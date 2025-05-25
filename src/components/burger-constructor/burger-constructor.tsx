@@ -8,19 +8,23 @@ import {
   placeOrder,
   selectPostOrderLoading
 } from '../../features/slices/ordersSlice';
+import {
+  selectConstructorBun,
+  selectConstructorIngredients,
+  clearConstructor
+} from '../../features/slices/constructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const orderRequest = useSelector(selectPostOrderLoading);
+  const bun = useSelector(selectConstructorBun);
+  const ingredients = useSelector(selectConstructorIngredients);
 
-  /** TODO: взять переменные constructorItems и orderModalData из стора */
   const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
+    bun,
+    ingredients
   };
 
   const orderModalData = null;
@@ -33,17 +37,19 @@ export const BurgerConstructor: FC = () => {
       return;
     }
 
-    // const ingredients = [
-    //   constructorItems.bun.price,
-    //   ...constructorItems.ingredients,
-    //   constructorItems.bun.price
-    // ];
+    const ingredientIds = [
+      constructorItems.bun._id,
+      ...constructorItems.ingredients.map(
+        (item: TConstructorIngredient) => item._id
+      ),
+      constructorItems.bun._id
+    ];
 
-    // dispatch(placeOrder({ ingredients }));
+    dispatch(placeOrder({ ingredients: ingredientIds }));
   };
 
   const closeOrderModal = () => {
-    // TODO: Clear constructor and close modal
+    dispatch(clearConstructor());
   };
 
   const price = useMemo(

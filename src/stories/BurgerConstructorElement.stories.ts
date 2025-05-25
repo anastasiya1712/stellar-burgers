@@ -1,6 +1,6 @@
-import { BurgerConstructorElementUI } from '@ui';
 import type { Meta, StoryObj } from '@storybook/react';
-import { totalmem } from 'os';
+import { BurgerConstructorElementUI } from '@ui';
+import { TConstructorIngredient } from '@utils-types';
 
 const meta = {
   title: 'Example/BurgerConstructorElement',
@@ -9,29 +9,31 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
-    layout: 'fullscreen'
+    layout: 'centered'
   }
 } satisfies Meta<typeof BurgerConstructorElementUI>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const mockIngredient: TConstructorIngredient = {
+  _id: '111',
+  uniqueId: '222',
+  name: 'Булка',
+  type: 'top',
+  proteins: 12,
+  fat: 33,
+  carbohydrates: 22,
+  calories: 33,
+  price: 123,
+  image: '',
+  image_large: '',
+  image_mobile: ''
+};
+
 export const DefaultElement: Story = {
   args: {
-    ingredient: {
-      _id: '111',
-      id: '222',
-      name: 'Булка',
-      type: 'top',
-      proteins: 12,
-      fat: 33,
-      carbohydrates: 22,
-      calories: 33,
-      price: 123,
-      image: '',
-      image_large: '',
-      image_mobile: ''
-    },
+    ingredient: mockIngredient,
     index: 0,
     totalItems: 1,
     handleMoveUp: () => {},
