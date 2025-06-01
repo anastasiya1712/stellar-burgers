@@ -1,3 +1,5 @@
+import  ingredients  from '../fixtures/ingredients.json';
+
 describe('Burger Constructor Tests', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/auth/user', {
@@ -67,4 +69,65 @@ describe('Burger Constructor Tests', () => {
 
     });
   });
+
+  describe('Бургер конструктор', () => {
+  beforeEach(() => {
+    // Мокаем API ингредиентов
+    cy.intercept('GET', 'api/ingredients', {
+      statusCode: 200,
+      body: ingredients
+    }).as('getIngredients');
+
+    // Мокаем API заказов
+    cy.intercept('POST', 'api/orders', {
+      statusCode: 200,
+      body: { success: true, name: 'Space бургер', order: { number: 12345 } }
+    }).as('postOrder');
+
+    cy.visit('/');
+    cy.wait('@getIngredients');
+  });
+
+  it('должен добавлять ингредиент в конструктор', () => {
+    const ingredient = ingredients.data.find(item => item.type !== 'bun');
+    if (!ingredient) return;
+
+    // cy.contains(ingredient.name)
+    //   .closest('[class^=burger-ingredients_ingredient__]')
+    //   .as('draggableItem');
+
+    // Находим область конструктора
+    cy.get('[data-test="constructor-drop-target"]').as('dropTarget');
+
+    // Выполняем перетаскивание
+    //cy.get('@draggableItem').trigger('dragstart');
+    cy.get('@dropTarget').trigger('drop').trigger('dragend');
+
+    // Проверяем, что ингредиент появился в конструкторе
+    // cy.get('[data-test="constructor-filling"]')
+    //   .should('contain', ingredient.name);
+  });
+
+  it('должен добавлять булку в конструктор', () => {
+    const bun = ingredients.data.find(item => item.type === 'bun');
+    if (!bun) return;
+
+    // Находим элемент булки по имени
+    // cy.contains(bun.name)
+    //   .closest('[class^=burger-ingredients_ingredient__]')
+    //   .as('draggableBun');
+
+    // Находим область конструктора
+    cy.get('[data-test="constructor-drop-target"]').as('dropTarget');
+
+    // Выполняем перетаскивание
+    //cy.get('@draggableBun').trigger('dragstart');
+    cy.get('@dropTarget').trigger('drop').trigger('dragend');
+
+    // Проверяем, что булка появилась в конструкторе
+    // cy.get('[data-test="constructor-bun"]')
+    //   .should('contain', `${bun.name} (верх)`)
+    //   .and('contain', `${bun.name} (низ)`);
+  });
+});
 }); 

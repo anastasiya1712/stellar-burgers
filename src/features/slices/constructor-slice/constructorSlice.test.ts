@@ -107,7 +107,7 @@ describe('constructor reducer', () => {
   it('should not remove any ingredient when constructor is empty', () => {
     const action = removeIngredient('non-existing-id');
     const newState = reducer(initialState, action);
-    
+
     expect(newState).toEqual(initialState);
   });
 
@@ -124,7 +124,7 @@ describe('constructor reducer', () => {
     const originalState = { ...state };
     const action = moveIngredient({ dragIndex: 5, hoverIndex: 10 });
     const newState = reducer(state, action);
-    
+
     expect(newState).toEqual(originalState);
   });
 
@@ -141,14 +141,14 @@ describe('constructor reducer', () => {
     const originalState = { ...state };
     const action = moveIngredient({ dragIndex: 1, hoverIndex: 1 });
     const newState = reducer(state, action);
-    
+
     expect(newState).toEqual(originalState);
   });
 
   it('should not move ingredients in empty constructor', () => {
     const action = moveIngredient({ dragIndex: 0, hoverIndex: 1 });
     const newState = reducer(initialState, action);
-    
+
     expect(newState).toEqual(initialState);
   });
 });

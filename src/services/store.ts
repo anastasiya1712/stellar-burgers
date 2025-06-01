@@ -27,7 +27,7 @@ export const storeConfig = {
         ignoredPaths: ['items.dates']
       }
     })
-}
+};
 
 export const store = configureStore(storeConfig);
 
