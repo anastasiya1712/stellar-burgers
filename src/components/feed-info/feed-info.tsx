@@ -4,7 +4,7 @@ import {
   selectFeeds,
   selectFeedsTotal,
   selectFeedsTotalToday
-} from '../../features/slices/feedsSlice';
+} from '../../features/slices/feeds-slice/feedsSlice';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
 

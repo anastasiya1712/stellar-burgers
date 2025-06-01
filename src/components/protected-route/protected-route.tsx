@@ -3,7 +3,7 @@ import { useSelector } from '../../services/store';
 import {
   selectUser,
   selectGetUserLoading
-} from '../../features/slices/userSlice';
+} from '../../features/slices/user-slice/userSlice';
 import { FC } from 'react';
 import { Preloader } from '../ui/preloader';
 

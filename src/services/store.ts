@@ -4,11 +4,11 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import ingredientsReducer from '../features/slices/ingredientsSlice';
-import constructorReducer from '../features/slices/constructorSlice';
-import ordersReducer from '../features/slices/ordersSlice';
-import userReducer from '../features/slices/userSlice';
-import feedsReducer from '../features/slices/feedsSlice';
+import ingredientsReducer from '../features/slices/ingredients-slice/ingredientsSlice';
+import constructorReducer from '../features/slices/constructor-slice/constructorSlice';
+import ordersReducer from '../features/slices/orders-slice/ordersSlice';
+import userReducer from '../features/slices/user-slice/userSlice';
+import feedsReducer from '../features/slices/feeds-slice/feedsSlice';
 
 export const store = configureStore({
   reducer: {

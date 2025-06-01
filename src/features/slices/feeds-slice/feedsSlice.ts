@@ -1,6 +1,6 @@
 import { getFeedsApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../services/store';
+import { RootState } from '../../../services/store';
 import { TOrder } from '@utils-types';
 
 interface FeedsResponse {
