@@ -4,12 +4,12 @@
 
 .main {
   display: flex;
-  height: 100%;
   width: 1240px;
-  overflow: hidden;
   margin: 0 auto;
+  gap: 60px;
 }
 
 .orders {
-  width: 100%;
+  flex-grow: 1;
+  max-width: 860px;
 }
