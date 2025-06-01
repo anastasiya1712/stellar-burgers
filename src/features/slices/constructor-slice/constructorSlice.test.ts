@@ -23,7 +23,7 @@ describe('constructor reducer', () => {
     price: 100,
     image: 'bun.jpg',
     image_mobile: 'bun-mobile.jpg',
-    image_large: 'bun-large.jpg',
+    image_large: 'bun-large.jpg'
   };
 
   const mockIngredient: TIngredient = {
@@ -37,7 +37,7 @@ describe('constructor reducer', () => {
     price: 50,
     image: 'ingredient.jpg',
     image_mobile: 'ingredient-mobile.jpg',
-    image_large: 'ingredient-large.jpg',
+    image_large: 'ingredient-large.jpg'
   };
 
   it('should return the initial state', () => {
@@ -81,10 +81,13 @@ describe('constructor reducer', () => {
   it('should handle moving ingredients', () => {
     // Add two ingredients
     const state = reducer(initialState, addIngredient(mockIngredient));
-    const state2 = reducer(state, addIngredient({
-      ...mockIngredient,
-      _id: 'ingredient-id-2'
-    }));
+    const state2 = reducer(
+      state,
+      addIngredient({
+        ...mockIngredient,
+        _id: 'ingredient-id-2'
+      })
+    );
 
     const moveAction = moveIngredient({ dragIndex: 0, hoverIndex: 1 });
     const newState = reducer(state2, moveAction);
