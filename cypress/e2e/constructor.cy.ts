@@ -30,27 +30,62 @@ describe('Burger Constructor Tests', () => {
     cy.clearCookie('accessToken');
   });
 
-  it('should open and close ingredient modal', () => {
-    // Открываем модальное окно ингредиента
-    cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
-    
-    // Проверяем, что модальное окно открылось с правильным контентом
-    cy.get('[data-test="modal"]').should('exist');
-    cy.get('[data-test="modal"]').contains('Краторная булка N-200i');
-    
-    // Закрываем по кнопке
-    cy.get('[data-test="modal-close"]').click();
-    cy.get('[data-test="modal"]').should('not.exist');
-  });
+  describe('Модальные окна', () => {
+    describe('Модальное окно ингредиента', () => {
+      it('должно открываться при клике на ингредиент', () => {
+        // Открываем модальное окно ингредиента
+        cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
+        
+        // Проверяем, что модальное окно открылось
+        cy.get('[data-test="modal"]').should('exist');
+        // Проверяем заголовок
+        cy.get('[data-test="modal"]').contains('Детали ингредиента');
+        // Проверяем содержимое
+        cy.get('[data-test="modal"]').contains('Краторная булка N-200i');
+      });
 
-  it('should close modal by clicking overlay', () => {
-    // Открываем модальное окно ингредиента
-    cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
-    
-    // Закрываем кликом по оверлею
-    cy.get('[data-test="modal-overlay"]').click({ force: true });
-    
-    // Проверяем, что модальное окно закрылось
-    cy.get('[data-test="modal"]').should('not.exist');
+      it('должно закрываться при клике на крестик', () => {
+        // Открываем модальное окно ингредиента
+        cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
+        
+        // Проверяем, что модальное окно открылось
+        cy.get('[data-test="modal"]').should('exist');
+        
+        // Закрываем по крестику
+        cy.get('[data-test="modal-close"]').click();
+        
+        // Проверяем, что модальное окно закрылось
+        cy.get('[data-test="modal"]').should('not.exist');
+      });
+
+      it('должно закрываться при клике на оверлей', () => {
+        // Открываем модальное окно ингредиента
+        cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
+        
+        // Проверяем, что модальное окно открылось
+        cy.get('[data-test="modal"]').should('exist');
+        
+        // Закрываем кликом по оверлею
+        cy.get('[data-test="modal-overlay"]').click({ force: true });
+        
+        // Проверяем, что модальное окно закрылось
+        cy.get('[data-test="modal"]').should('not.exist');
+      });
+
+      it('должно закрываться при нажатии на Esc', () => {
+        // Открываем модальное окно ингредиента
+        cy.get('[data-test="ingredient-60d3b41abdacab0026a733c6"]').click();
+        
+        // Проверяем, что модальное окно открылось
+        cy.get('[data-test="modal"]').should('exist');
+        
+        // Нажимаем Esc
+        cy.get('body').type('{esc}');
+        
+        // Проверяем, что модальное окно закрылось
+        cy.get('[data-test="modal"]').should('not.exist');
+      });
+
+    });
   });
 }); 
