@@ -79,7 +79,6 @@ describe('constructor reducer', () => {
   });
 
   it('should handle moving ingredients', () => {
-    // Add two ingredients
     const state = reducer(initialState, addIngredient(mockIngredient));
     const state2 = reducer(
       state,
@@ -97,12 +96,59 @@ describe('constructor reducer', () => {
   });
 
   it('should handle clearing the constructor', () => {
-    // Add bun and ingredient
     let state = reducer(initialState, addIngredient(mockBun));
     state = reducer(state, addIngredient(mockIngredient));
 
     const newState = reducer(state, clearConstructor());
 
+    expect(newState).toEqual(initialState);
+  });
+
+  it('should not remove any ingredient when constructor is empty', () => {
+    const action = removeIngredient('non-existing-id');
+    const newState = reducer(initialState, action);
+    
+    expect(newState).toEqual(initialState);
+  });
+
+  it('should not move ingredients with out-of-bound indices', () => {
+    let state = reducer(initialState, addIngredient(mockIngredient));
+    state = reducer(
+      state,
+      addIngredient({
+        ...mockIngredient,
+        _id: 'ingredient-id-2'
+      })
+    );
+
+    const originalState = { ...state };
+    const action = moveIngredient({ dragIndex: 5, hoverIndex: 10 });
+    const newState = reducer(state, action);
+    
+    expect(newState).toEqual(originalState);
+  });
+
+  it('should not move ingredients with identical indices', () => {
+    let state = reducer(initialState, addIngredient(mockIngredient));
+    state = reducer(
+      state,
+      addIngredient({
+        ...mockIngredient,
+        _id: 'ingredient-id-2'
+      })
+    );
+
+    const originalState = { ...state };
+    const action = moveIngredient({ dragIndex: 1, hoverIndex: 1 });
+    const newState = reducer(state, action);
+    
+    expect(newState).toEqual(originalState);
+  });
+
+  it('should not move ingredients in empty constructor', () => {
+    const action = moveIngredient({ dragIndex: 0, hoverIndex: 1 });
+    const newState = reducer(initialState, action);
+    
     expect(newState).toEqual(initialState);
   });
 });
