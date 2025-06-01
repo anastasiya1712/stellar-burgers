@@ -1,3 +1,13 @@
+/// <reference types="cypress" />
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      getBySel(selector: string): Chainable<JQuery<HTMLElement>>;
+    }
+  }
+}
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -19,5 +29,9 @@
 
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('getBySel', (selector: string) => {
+  return cy.get(`[data-test=${selector}]`);
+});
 
 export {}; 

@@ -1,7 +1,4 @@
 /// <reference types="cypress" />
 
-declare namespace Cypress {
-  interface Chainable {
-    // Add custom commands types here
-  }
-} 
+// Типы команд объявлены в commands.ts
+export {}; 
