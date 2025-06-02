@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from '../../services/store';
 import {
   registerUser,
   selectRegisterError
-} from '../../features/slices/userSlice';
+} from '../../features/slices/user-slice/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const Register: FC = () => {

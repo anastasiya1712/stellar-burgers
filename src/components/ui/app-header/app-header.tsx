@@ -9,7 +9,7 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from '../../../services/store';
-import { selectUser } from '../../../features/slices/userSlice';
+import { selectUser } from '../../../features/slices/user-slice/userSlice';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
   const location = useLocation();

@@ -4,13 +4,14 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import ingredientsReducer from '../features/slices/ingredientsSlice';
-import constructorReducer from '../features/slices/constructorSlice';
-import ordersReducer from '../features/slices/ordersSlice';
-import userReducer from '../features/slices/userSlice';
-import feedsReducer from '../features/slices/feedsSlice';
+import ingredientsReducer from '../features/slices/ingredients-slice/ingredientsSlice';
+import constructorReducer from '../features/slices/constructor-slice/constructorSlice';
+import ordersReducer from '../features/slices/orders-slice/ordersSlice';
+import userReducer from '../features/slices/user-slice/userSlice';
+import feedsReducer from '../features/slices/feeds-slice/feedsSlice';
+import { GetDefaultMiddleware } from '@reduxjs/toolkit/dist/getDefaultMiddleware';
 
-export const store = configureStore({
+export const storeConfig = {
   reducer: {
     ingredients: ingredientsReducer,
     constructor: constructorReducer,
@@ -18,18 +19,17 @@ export const store = configureStore({
     user: userReducer,
     feeds: feedsReducer
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: (getDefaultMiddleware: GetDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
         ignoredActions: ['constructor/addIngredient'],
-        // Ignore these field paths in all actions
         ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
-        // Ignore these paths in the state
         ignoredPaths: ['items.dates']
       }
     })
-});
+};
+
+export const store = configureStore(storeConfig);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

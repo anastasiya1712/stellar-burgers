@@ -1,0 +1,184 @@
+
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+ PASS  src/features/slices/constructor-slice/constructorSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+ FAIL  src/features/slices/ingredients-slice/ingredientsSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '@api' from 'src/features/slices/ingredients-slice/ingredientsSlice.ts'
+
+    Require stack:
+      src/features/slices/ingredients-slice/ingredientsSlice.ts
+      src/features/slices/ingredients-slice/ingredientsSlice.test.ts
+
+    > 1 | import { getIngredientsApi } from '@api';
+        | ^
+      2 | import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+      3 |
+      4 | interface IngredientsState {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (src/features/slices/ingredients-slice/ingredientsSlice.ts:1:1)
+      at Object.require (src/features/slices/ingredients-slice/ingredientsSlice.test.ts:1:1)
+
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+ FAIL  src/features/slices/feeds-slice/feedsSlice.test.ts
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '@api' from 'src/features/slices/feeds-slice/feedsSlice.ts'
+
+    Require stack:
+      src/features/slices/feeds-slice/feedsSlice.ts
+      src/features/slices/feeds-slice/feedsSlice.test.ts
+
+    > 1 | import { getFeedsApi } from '@api';
+        | ^
+      2 | import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+      3 | import { RootState } from '../../../services/store';
+      4 | import { TOrder } from '@utils-types';
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (src/features/slices/feeds-slice/feedsSlice.ts:1:1)
+      at Object.require (src/features/slices/feeds-slice/feedsSlice.test.ts:1:1)
+
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+ FAIL  src/features/slices/orders-slice/ordersSlice.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '@api' from 'src/features/slices/orders-slice/ordersSlice.ts'
+
+    Require stack:
+      src/features/slices/orders-slice/ordersSlice.ts
+      src/features/slices/orders-slice/ordersSlice.test.ts
+
+    > 1 | import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
+        | ^
+      2 | import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+      3 | import { RootState } from '../../services/store';
+      4 | import { TOrder } from '@utils-types';
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (src/features/slices/orders-slice/ordersSlice.ts:1:1)
+      at Object.require (src/features/slices/orders-slice/ordersSlice.test.ts:1:1)
+
+ FAIL  src/features/slices/user-slice/userSlice.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '@api' from 'src/features/slices/user-slice/userSlice.ts'
+
+    Require stack:
+      src/features/slices/user-slice/userSlice.ts
+      src/features/slices/user-slice/userSlice.test.ts
+
+    > 1 | import {
+        | ^
+      2 |   forgotPasswordApi,
+      3 |   getUserApi,
+      4 |   loginUserApi,
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.require (src/features/slices/user-slice/userSlice.ts:1:1)
+      at Object.require (src/features/slices/user-slice/userSlice.test.ts:1:1)
+
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...
+---------------------|---------|----------|---------|---------|-------------------
+File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+---------------------|---------|----------|---------|---------|-------------------
+All files            |   96.59 |    66.66 |    62.5 |   96.59 |                   
+ constructorSlice.ts |   96.59 |    66.66 |    62.5 |   96.59 | 84,86,88          
+---------------------|---------|----------|---------|---------|-------------------
+Test Suites: 4 failed, 1 passed, 5 total
+Tests:       6 passed, 6 total
+Snapshots:   0 total
+Time:        3.309 s
+Ran all test suites.
+Waiting for the debugger to disconnect...
+Waiting for the debugger to disconnect...clear
+canastasiakuzmicenok@MacBook-Air-Anastasia stellar-burgers % > react-canonical@0.1.0 test
+> jest
+
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/fea%                                                                                                                  anastasiakuzmicenok@MacBook-Air-Anastasia stellar-burgers % > react-canonical@0.1.0 test
+> jest
+
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+
+ RUNS  src/fea%                                                                                                                  anastasiakuzmicenok@MacBook-Air-Anastasia stellar-burgers % > react-canonical@0.1.0 test
+> jest
+
+Debugger attached.
+
+ RUNS  src/features/slices/user-slice/userSlice.test.ts
+ RUNS  src/features/slices/orders-slice/ordersSlice.test.ts
+Debugger attached.
+

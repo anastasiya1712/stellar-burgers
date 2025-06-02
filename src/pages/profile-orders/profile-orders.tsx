@@ -6,7 +6,7 @@ import {
   selectOrders,
   selectOrdersLoading,
   updateOrders
-} from '../../features/slices/ordersSlice';
+} from '../../features/slices/orders-slice/ordersSlice';
 import { Preloader } from '@ui';
 
 export const ProfileOrders: FC = () => {

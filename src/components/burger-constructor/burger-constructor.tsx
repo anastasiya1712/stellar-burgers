@@ -2,19 +2,19 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import { selectUser } from '../../features/slices/userSlice';
+import { selectUser } from '../../features/slices/user-slice/userSlice';
 import { useNavigate } from 'react-router-dom';
 import {
   placeOrder,
   selectPostOrderLoading,
   selectCurrentOrder,
   clearCurrentOrder
-} from '../../features/slices/ordersSlice';
+} from '../../features/slices/orders-slice/ordersSlice';
 import {
   selectConstructorBun,
   selectConstructorIngredients,
   clearConstructor
-} from '../../features/slices/constructorSlice';
+} from '../../features/slices/constructor-slice/constructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();

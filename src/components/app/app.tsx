@@ -11,16 +11,15 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
-import { fetchIngredients } from '../../features/slices/ingredientsSlice';
-import { checkAuth } from '../../features/slices/userSlice';
-import { clearCurrentOrder } from '../../features/slices/ordersSlice';
-import { clearConstructor } from '../../features/slices/constructorSlice';
+import { fetchIngredients } from '../../features/slices/ingredients-slice/ingredientsSlice';
+import { checkAuth } from '../../features/slices/user-slice/userSlice';
+import { clearCurrentOrder } from '../../features/slices/orders-slice/ordersSlice';
+import { clearConstructor } from '../../features/slices/constructor-slice/constructorSlice';
 
 const App = () => {
   const location = useLocation();

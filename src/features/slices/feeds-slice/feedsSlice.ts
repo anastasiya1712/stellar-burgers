@@ -1,7 +1,7 @@
-import { getFeedsApi } from '@api';
+import { getFeedsApi } from '../../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../services/store';
-import { TOrder } from '@utils-types';
+import { RootState } from '../../../services/store';
+import { TOrder } from '../../../utils/types';
 
 interface FeedsResponse {
   success: boolean;

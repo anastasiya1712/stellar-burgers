@@ -1,7 +1,11 @@
-import { getOrderByNumberApi, getOrdersApi, orderBurgerApi } from '@api';
+import {
+  getOrderByNumberApi,
+  getOrdersApi,
+  orderBurgerApi
+} from '../../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../services/store';
-import { TOrder } from '@utils-types';
+import { RootState } from '../../../services/store';
+import { TOrder } from '../../../utils/types';
 
 interface OrdersResponse {
   success: boolean;

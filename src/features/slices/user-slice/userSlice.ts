@@ -6,10 +6,10 @@ import {
   registerUserApi,
   resetPasswordApi,
   updateUserApi
-} from '@api';
+} from '../../../utils/burger-api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../services/store';
-import { deleteCookie, getCookie, setCookie } from '../../utils/cookie';
+import { RootState } from '../../../services/store';
+import { deleteCookie, getCookie, setCookie } from '../../../utils/cookie';
 
 interface User {
   email: string;
